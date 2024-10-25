@@ -40,6 +40,16 @@ app.post('/add-product', upload.single('image'), (req, res) => {
     });
 });
 
+// Endpoint to Read Products
+app.get('/products', (req, res) => {
+    const sql = 'SELECT * FROM tbl_products';
+    db.query(sql, (err, results) => {
+        if (err) throw err;
+        res.json(results);
+    });
+});
+
+
 app.use('/uploads', express.static('uploads'));
 
 

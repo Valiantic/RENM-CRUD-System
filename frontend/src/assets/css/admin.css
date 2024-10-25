@@ -8,3 +8,25 @@
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+
+/* CSS FOR READ PRODUCTS */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
