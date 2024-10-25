@@ -1,21 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import '../assets/css/admin.css';
 
-const ProductList = () => {
-    const [products, setProducts] = useState([]);
-
-    useEffect(() => {
-        // Fetch products from the backend
-        axios.get('http://localhost:3001/products')
-            .then(response => {
-                setProducts(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching products:', error);
-            });
-    }, []);
-
+// Added Props for instant add refresh on app 
+const ProductList = ({ products }) => {
     return (
         <div>
             <h2>Product List</h2>

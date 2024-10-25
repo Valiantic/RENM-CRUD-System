@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState  } from 'react';
 import axios from 'axios';
 import '../assets/css/admin.css'
 
-const AddProduct = () => {
+// Added Props for instant add refresh on app 
+const AddProduct = ({ onProductAdded }) => {
     const [productName, setProductName] = useState('');
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
@@ -25,6 +26,8 @@ const AddProduct = () => {
             setPrice('');
             setDescription('');
             setImage(null);
+
+            onProductAdded(); // Call the callback to refresh the product list
         } catch (error) {
             console.error('Error adding product:', error);
         }
