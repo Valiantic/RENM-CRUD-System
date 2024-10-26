@@ -35,7 +35,7 @@ useEffect(() => {
       {/* Props passes on AddProduct */}
       <AddProduct onProductAdded={fetchProducts} />
       {/* Props passes on ProductList */}
-      <ProductList products={products} />
+      <ProductList products={products} onProductUpdated={fetchProducts}/>
     </>
   )
 }
