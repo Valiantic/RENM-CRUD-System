@@ -30,7 +30,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Endpoint to Add Product
+
+// CRUD FUNCTIONALITY
+
+// Endpoint to Create Product
 app.post('/add-product', upload.single('image'), (req, res) => {
     const { product_name, price, description } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
@@ -83,6 +86,20 @@ app.put('/products/:id', upload.single('image'), (req, res) => {
             return res.status(500).json({ message: "Error updating product" });
         }
         res.json({ message: "Product updated successfully" });
+    });
+});
+
+// Endpoint to Delete a Product by id
+app.delete('/products/:id', (req, res) => {
+    const productId = req.params.id;
+
+    const sql = `DELETE FROM tbl_products WHERE id = ?`;
+    db.query(sql, [productId], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Error deleting product" });
+        }
+        res.json({ message: "Product deleted successfully" });
     });
 });
 
