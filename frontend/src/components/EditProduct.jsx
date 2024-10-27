@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../assets/css/editModal.css';
 
 const EditProduct = ({ product, onClose, onProductUpdated }) => {
+
+    // State variables to track product details
     const [productName, setProductName] = useState(product.product_name);
+    // Set initial state for price and description
     const [price, setPrice] = useState(product.price);
+    // Set initial state for price and description
     const [description, setDescription] = useState(product.description);
+    // Set initial state for price and description
     const [image, setImage] = useState(null);
 
     const handleUpdate = async (e) => {
@@ -30,7 +36,7 @@ const EditProduct = ({ product, onClose, onProductUpdated }) => {
 
     return (
         <div className="modal">
-            <div className="modal-content">
+            <div className="modal-content-edit">
                 <h2>Edit Product</h2>
                 <form onSubmit={handleUpdate}>
                     <input

@@ -1,29 +1,37 @@
-import React from 'react';
-import '../assets/css/admin.css';
+import React, { useState } from 'react';
 import EditProduct from './EditProduct';
-import { useState } from 'react';
 import axios from 'axios';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
-// Added Props for instant add refresh on app 
 const ProductList = ({ products, onProductUpdated }) => {
-
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [productToDelete, setProductToDelete] = useState(null); // Track product to delete
 
     // Function to handle the Edit button click 
     const handleEditClick = (product) => {
         setSelectedProduct(product); // Set the selected product for editing
     };
 
-    // Function to handle the Delete button click
-    const handleDeleteClick = async (productId) => {
+    // Function to open the delete confirmation modal
+    const openDeleteConfirmation = (productId) => {
+        setProductToDelete(productId); // Set product to delete for confirmation
+    };
+
+    // Function to handle confirmed deletion
+    const confirmDelete = async () => {
         try {
-            await axios.delete(`http://localhost:3001/products/${productId}`);
+            await axios.delete(`http://localhost:3001/products/${productToDelete}`);
             onProductUpdated(); // Refresh the product list after deletion
+            setProductToDelete(null); // Close the confirmation modal
         } catch (error) {
             console.error('Error deleting product:', error);
         }
     };
 
+    // Function to cancel the deletion
+    const cancelDelete = () => {
+        setProductToDelete(null); // Close the modal without deleting
+    };
 
     return (
         <div>
@@ -38,12 +46,11 @@ const ProductList = ({ products, onProductUpdated }) => {
 
                         {/* BUTTONS FOR EDIT AND DELETE */}
                         <button onClick={() => handleEditClick(product)}>Edit</button>
-                        <button onClick={() => handleDeleteClick(product.id)}>Delete</button>
+                        <button onClick={() => openDeleteConfirmation(product.id)}>Delete</button>
 
                     </div>
                 ))}
             </div>
-
 
             {/* EDIT PRODUCT MODAL */}
             {selectedProduct && (
@@ -53,7 +60,14 @@ const ProductList = ({ products, onProductUpdated }) => {
                     onProductUpdated={onProductUpdated}
                 />
             )}
-            
+
+            {/* DELETE CONFIRMATION MODAL */}
+            {productToDelete && (
+                <DeleteConfirmationModal
+                    onConfirm={confirmDelete} // Delete action on confirmation
+                    onCancel={cancelDelete} // Cancel action
+                />
+            )}
         </div>
     );
 };
