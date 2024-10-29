@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 
-// CRUD FUNCTIONALITY
+// ADMIN CRUD FUNCTIONALITY
 
 // Endpoint to Create Product
 app.post('/add-product', upload.single('image'), (req, res) => {
