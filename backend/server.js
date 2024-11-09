@@ -35,14 +35,20 @@ const upload = multer({ storage });
 
 // Endpoint to Create Product
 app.post('/add-product', upload.single('image'), (req, res) => {
-    const { product_name, price, description, category } = req.body;
+    const { product_name, price, description, category, sizes } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const sql = 'INSERT INTO tbl_products (product_name, price, description, image_url, category) VALUES (?, ?, ?, ?,?)';
-    db.query(sql, [product_name, price, description, imageUrl, category], (err, result) => {
-        if (err) throw err;
-        res.json({ message: 'Product added successfully!' });
-    });
+    // Parse the sizes from JSON string
+    const parsedSizes = JSON.parse(sizes);  // 'sizes' will be a JSON string from the frontend
+
+    const sql = 'INSERT INTO tbl_products (product_name, price, description, image_url, category, sizes) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(sql, [product_name, price, description, imageUrl, category, JSON.stringify(parsedSizes)], (err, result) => {
+        if (err) {
+            console.error('Error adding product:', err);
+            return res.status(500).json({ message: 'Error adding product' });
+          }
+          res.status(201).json({ message: 'Product added successfully', productId: result.insertId });
+        });
 });
 
 // Endpoint to Read Products
