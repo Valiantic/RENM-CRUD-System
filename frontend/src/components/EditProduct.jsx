@@ -3,15 +3,20 @@ import axios from 'axios';
 import '../assets/css/editModal.css';
 
 const EditProduct = ({ product, onClose, onProductUpdated }) => {
-
     // State variables to track product details
     const [productName, setProductName] = useState(product.product_name);
-    // Set initial state for price and description
     const [price, setPrice] = useState(product.price);
-    // Set initial state for price and description
     const [description, setDescription] = useState(product.description);
-    // Set initial state for price and description
     const [image, setImage] = useState(null);
+    const [category, setCategory] = useState(product.category); // Track the selected category
+
+    // For Select / Dropdown
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'category') {
+            setCategory(value);
+        }
+    };
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -19,6 +24,7 @@ const EditProduct = ({ product, onClose, onProductUpdated }) => {
         formData.append('product_name', productName);
         formData.append('price', price);
         formData.append('description', description);
+        formData.append('category', category); // Send the category in the form data
         if (image) formData.append('image', image);
 
         try {
@@ -63,6 +69,19 @@ const EditProduct = ({ product, onClose, onProductUpdated }) => {
                         type="file"
                         onChange={(e) => setImage(e.target.files[0])}
                     />
+
+                    {/* Select input for category */}
+                    <select
+                        name="category"
+                        value={category} 
+                        onChange={handleChange} 
+                        className="w-full mb-4 p-2 border rounded"
+                    >
+                        <option value="">Select Category</option>
+                        <option value="Chiffon Base">Chiffon Base</option>
+                        <option value="Choco Moist">Choco Moist</option>
+                    </select>
+
                     <button type="submit">Update Product</button>
                     <button type="button" onClick={onClose}>Cancel</button>
                 </form>
