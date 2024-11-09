@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../assets/css/admin.css';
 
-const AddProduct = () => {
+// Props pass here for Instant refresh rate
+const AddProduct = ({ onProductAdded }) => {
 
   // Data to be sent to the server
   const [product, setProduct] = useState({ 
@@ -59,7 +60,11 @@ const AddProduct = () => {
         image: null,
         category: '',
         sizes: [],
+        
       });
+
+      onProductAdded();  // Fetch products Instant Refresh Rate
+      
     } catch (error) {
       console.error('Error adding product:', error);
     }
@@ -114,107 +119,107 @@ const AddProduct = () => {
       </select>
 
       {/* Checkbox for Size Selection */}
-      <div className="mb-4">
+      <div className="select">
         <h3 className="text-lg font-semibold mb-2">Select Size & Price</h3>
         <label className="block">
           <input
             type="checkbox"
-            value="4 x 4 - 240"
-            checked={product.sizes.includes('4 x 4 - 240')}
+            value="4 x 4 - ₱240"
+            checked={product.sizes.includes('4 x 4 - ₱240')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          4" x 4" - 240
+          4 x 4 - ₱240
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="7 x 3 - 550"
-            checked={product.sizes.includes('7 x 3 - 550')}
+            value="7 x 3 - ₱550"
+            checked={product.sizes.includes('7 x 3 - ₱550')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          7" x 3" - 550
+          7" x 3" - ₱550
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="7 x 5 - 849"
-            checked={product.sizes.includes('7 x 5 - 849')}
+            value="7 x 5 - ₱849"
+            checked={product.sizes.includes('7 x 5 - ₱849')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          7" x 5" - 849
+          7" x 5" - ₱849
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="7 x 7 - 1,299"
-            checked={product.sizes.includes('7 x 7 - 1,299')}
+            value="7 x 7 - ₱1,299"
+            checked={product.sizes.includes('7 x 7 - ₱1,299')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          7" x 7" - 1,299
+          7" x 7" - ₱1,299
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="8 x 2.5 - 399"
-            checked={product.sizes.includes('8 x 2.5 - 399')}
+            value="8 x 2.5 - ₱399"
+            checked={product.sizes.includes('8 x 2.5 - ₱399')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          8" x 2.5" - 399
+          8" x 2.5" - ₱399
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="8 x 2.5 - 410"
-            checked={product.sizes.includes('8 x 2.5 - 410')}
+            value="8 x 2.5 - ₱410"
+            checked={product.sizes.includes('8 x 2.5 - ₱410')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          8" x 2.5" - 410
+          8 x 2.5 - ₱410
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="8 x 2.5 - 650"
-            checked={product.sizes.includes('8 x 2.5 - 650')}
+            value="8 x 2.5 - ₱650"
+            checked={product.sizes.includes('8 x 2.5 - ₱650')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          8" x 2.5" - 650
+          8" x 2.5" - ₱650
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="12 x 2.5 - 799"
-            checked={product.sizes.includes('12 x 2.5 - 799')}
+            value="12 x 2.5 - ₱799"
+            checked={product.sizes.includes('12 x 2.5 - ₱799')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          12" x 2.5" - 799
+          12" x 2.5" - ₱799
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="12 x 2.5 - 805"
-            checked={product.sizes.includes('12 x 2.5 - 805')}
+            value="12 x 2.5 - ₱805"
+            checked={product.sizes.includes('12 x 2.5 - ₱805')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          12" x 2.5" - 805
+          12" x 2.5" - ₱805
         </label>
         <label className="block">
           <input
             type="checkbox"
-            value="12 x 2.5 - 1,100"
-            checked={product.sizes.includes('12 x 2.5 - 1,100')}
+            value="12 x 2.5 - ₱1,100"
+            checked={product.sizes.includes('12 x 2.5 - ₱1,100')}
             onChange={handleSizeChange}
             className="mr-2"
           />
-          12" x 2.5" - 1,100
+          12" x 2.5" - ₱1,100
         </label>
       </div>
 

@@ -20,3 +20,9 @@
     height: auto;
     border-radius: 8px;
 }
+
+.select{
+    justify-items: center;
+    display: flex;
+    align-items: center;
+}

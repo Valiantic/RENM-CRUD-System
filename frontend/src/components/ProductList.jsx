@@ -33,6 +33,19 @@ const ProductList = ({ products, onProductUpdated }) => {
         setProductToDelete(null); // Close the modal without deleting
     };
 
+    // Function to safely get the sizes data
+    const getSizes = (sizes) => {
+        if (Array.isArray(sizes)) {
+            return sizes;
+        }
+        // If it's not an array, try parsing it as a JSON string or fallback to empty array
+        try {
+            return JSON.parse(sizes);
+        } catch {
+            return [];
+        }
+    };
+
     return (
         <div>
             <h2>Product List</h2>
@@ -41,8 +54,21 @@ const ProductList = ({ products, onProductUpdated }) => {
                     <div key={product.id} className="product-card">
                         <img src={`http://localhost:3001${product.image_url}`} alt={product.product_name} />
                         <h3>{product.product_name}</h3>
-                        <p>Price: ${product.price}</p>
+                        {/* <p>Price: ${product.price}</p> */}
+                        <p>Category: {product.category}</p>
                         <p>{product.description}</p>
+
+                        {/* Display the sizes as a list */}
+                        {product.sizes && getSizes(product.sizes).length > 0 && (
+                            <div>
+                                <h4>Available Sizes:</h4>
+                                <ul>
+                                    {getSizes(product.sizes).map((size, index) => (
+                                        <li key={index}>{size}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
                         {/* BUTTONS FOR EDIT AND DELETE */}
                         <button onClick={() => handleEditClick(product)}>Edit</button>
