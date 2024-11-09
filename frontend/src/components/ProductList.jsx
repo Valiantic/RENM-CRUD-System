@@ -47,38 +47,71 @@ const ProductList = ({ products, onProductUpdated }) => {
     };
 
     return (
-        <div>
-            <h2>Product List</h2>
-            <div className="product-grid">
-                {products.map((product) => (
-                    <div key={product.id} className="product-card">
-                        <img src={`http://localhost:3001${product.image_url}`} alt={product.product_name} />
-                        <h3>{product.product_name}</h3>
-                        {/* <p>Price: ${product.price}</p> */}
-                        <p>Category: {product.category}</p>
-                        <p>{product.description}</p>
+<div className="container mx-auto p-4">
+            <h2 className="text-xl font-semibold mb-4">Product List</h2>
+            <div className="overflow-x-auto">
+                <table className="w-full bg-white border border-gray-300 text-sm md:text-base">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="p-2 md:p-3 text-left border-b">Image</th>
+                            <th className="p-2 md:p-3 text-left border-b">Product Name</th>
+                            <th className="p-2 md:p-3 text-left border-b">Category</th>
+                            <th className="p-2 md:p-3 text-left border-b">Description</th>
+                            <th className="p-2 md:p-3 text-left border-b">Available Sizes</th>
+                            <th className="p-2 md:p-3 text-left border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {products.map((product) => {
+                            // Check if sizes exist and parse it if it's a string
+                            const sizes = Array.isArray(product.sizes) ? product.sizes : 
+                                          product.sizes ? JSON.parse(product.sizes) : [];
 
-                        {/* Display the sizes as a list */}
-                        {product.sizes && getSizes(product.sizes).length > 0 && (
-                            <div>
-                                <h4>Available Sizes:</h4>
-                                <ul>
-                                    {getSizes(product.sizes).map((size, index) => (
-                                        <li key={index}>{size}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        {/* BUTTONS FOR EDIT AND DELETE */}
-                        <button onClick={() => handleEditClick(product)}>Edit</button>
-                        <button onClick={() => openDeleteConfirmation(product.id)}>Delete</button>
-
-                    </div>
-                ))}
+                            return (
+                                <tr key={product.id} className="border-b hover:bg-gray-100">
+                                    <td className="p-2 md:p-3 flex justify-center">
+                                        <img
+                                            src={`http://localhost:3001${product.image_url}`}
+                                            alt={product.product_name}
+                                            className="rounded-full"
+                                            style={{ width: '55px', height: '55px', objectFit: 'cover' }}
+                                        />
+                                    </td>
+                                    <td className="p-2 md:p-3 text-gray-700">{product.product_name}</td>
+                                    <td className="p-2 md:p-3 text-gray-600">{product.category}</td>
+                                    <td className="p-2 md:p-3 text-gray-600 truncate max-w-xs">{product.description}</td>
+                                    <td className="p-2 md:p-3">
+                                        {sizes.length > 0 ? (
+                                            <ul className="list-disc ml-4">
+                                                {sizes.map((size, index) => (
+                                                    <li key={index} className="text-gray-500">{size}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <span className="text-gray-500">N/A</span>
+                                        )}
+                                    </td>
+                                    <td className="p-2 md:p-3 flex flex-col gap-2 md:flex-row">
+                                        <button
+                                            onClick={() => handleEditClick(product)}
+                                            className="bg-blue-500 text-white text-xs py-1 px-2 rounded hover:bg-blue-600"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => openDeleteConfirmation(product.id)}
+                                            className="bg-red-500 text-white text-xs py-1 px-2 rounded hover:bg-red-600"
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
 
-            {/* EDIT PRODUCT MODAL */}
             {selectedProduct && (
                 <EditProduct
                     product={selectedProduct}
@@ -87,14 +120,14 @@ const ProductList = ({ products, onProductUpdated }) => {
                 />
             )}
 
-            {/* DELETE CONFIRMATION MODAL */}
             {productToDelete && (
                 <DeleteConfirmationModal
-                    onConfirm={confirmDelete} // Delete action on confirmation
-                    onCancel={cancelDelete} // Cancel action
+                    onConfirm={confirmDelete}
+                    onCancel={cancelDelete}
                 />
             )}
         </div>
+
     );
 };
 
