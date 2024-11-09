@@ -35,11 +35,11 @@ const upload = multer({ storage });
 
 // Endpoint to Create Product
 app.post('/add-product', upload.single('image'), (req, res) => {
-    const { product_name, price, description } = req.body;
+    const { product_name, price, description, category } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const sql = 'INSERT INTO tbl_products (product_name, price, description, image_url) VALUES (?, ?, ?, ?)';
-    db.query(sql, [product_name, price, description, imageUrl], (err, result) => {
+    const sql = 'INSERT INTO tbl_products (product_name, price, description, image_url, category) VALUES (?, ?, ?, ?,?)';
+    db.query(sql, [product_name, price, description, imageUrl, category], (err, result) => {
         if (err) throw err;
         res.json({ message: 'Product added successfully!' });
     });

@@ -1,57 +1,111 @@
-import React, { useState  } from 'react';
+// AddProduct.jsx
+import React, { useState } from 'react';
 import axios from 'axios';
-import '../assets/css/admin.css'
+import '../assets/css/admin.css';
 
-// Added Props for instant add refresh on app 
-const AddProduct = ({ onProductAdded }) => {
-    const [productName, setProductName] = useState('');
-    const [price, setPrice] = useState('');
-    const [description, setDescription] = useState('');
-    const [image, setImage] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+const AddProduct = () => {
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('product_name', productName);
-        formData.append('price', price);
-        formData.append('description', description);
-        if (image) formData.append('image', image);
+  // Data to be sent to the server
+  const [product, setProduct] = useState({ 
+    name: '', 
+    price: '', 
+    description: '', 
+    image: null, 
+    category: ''  // Add category to state
+  });
 
-        try {
-            await axios.post('http://localhost:3001/add-product', formData);
-            setShowModal(true);  // Show modal on success
-            // Reset form
-            setProductName('');
-            setPrice('');
-            setDescription('');
-            setImage(null);
+  // modal state
+  const [showModal, setShowModal] = useState(false);
 
-            onProductAdded(); // Call the callback to refresh the product list
-        } catch (error) {
-            console.error('Error adding product:', error);
-        }
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct(prev => ({ ...prev, [name]: value }));
+  };
 
-    return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Product Name" required />
-                <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" required />
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required></textarea>
-                <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+  const handleFileChange = (e) => {
+    setProduct(prev => ({ ...prev, image: e.target.files[0] }));
+  };
 
-                <button type="submit">Add Product</button>
-            </form>
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('product_name', product.name);
+    formData.append('price', product.price);
+    formData.append('description', product.description);
+    formData.append('image', product.image);
+    formData.append('category', product.category);  // Append the category to form data
 
+    try {
+        // Send a POST request to the server
+      await axios.post('http://localhost:3001/add-product', formData);
+      setShowModal(true);  // Show modal on success
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
+      <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
+      
+      <input 
+        type="text" 
+        name="name" 
+        placeholder="Product Name" 
+        value={product.name} 
+        onChange={handleChange} 
+        className="w-full mb-4 p-2 border rounded" 
+      />
+      
+      <input 
+        type="number" 
+        name="price" 
+        placeholder="Price" 
+        value={product.price} 
+        onChange={handleChange} 
+        className="w-full mb-4 p-2 border rounded" 
+      />
+      
+      <textarea 
+        name="description" 
+        placeholder="Description" 
+        value={product.description} 
+        onChange={handleChange} 
+        className="w-full mb-4 p-2 border rounded" 
+      />
+      
+      <input 
+        type="file" 
+        onChange={handleFileChange} 
+        className="w-full mb-4 p-2 border rounded" 
+      />
+      
+      {/* Select input for category */}
+      <select 
+        name="category" 
+        value={product.category} 
+        onChange={handleChange} 
+        className="w-full mb-4 p-2 border rounded"
+      >
+        <option value="">Select Category</option>
+        <option value="Chiffon Base">Chiffon Base</option>
+        <option value="Choco Moist">Choco Moist</option>
+      </select>
+
+      <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded w-full">
+        Add Product
+      </button>
+
+            {/* Modal to show success message */}
             {showModal && (
                 <div className="modal">
                     <p>Product added successfully!</p>
                     <button onClick={() => setShowModal(false)}>Close</button>
                 </div>
             )}
-        </div>
-    );
+    </form>
+  );
 };
 
 export default AddProduct;
