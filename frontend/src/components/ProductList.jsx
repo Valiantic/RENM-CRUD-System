@@ -1,53 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EditProduct from './EditProduct';
 import axios from 'axios';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 const ProductList = ({ products, onProductUpdated }) => {
+
+    // State to hold the selected product for editing
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [productToDelete, setProductToDelete] = useState(null); // Track product to delete
+    const [productToDelete, setProductToDelete] = useState(null);
+    const [productList, setProductList] = useState(products);
 
-    // Function to handle the Edit button click 
+    useEffect(() => {
+        setProductList(products); // Ensure productList is up-to-date with props
+    }, [products]);
+
+    // Handle click on edit button
     const handleEditClick = (product) => {
-        setSelectedProduct(product); // Set the selected product for editing
+        setSelectedProduct(product);
     };
 
-    // Function to open the delete confirmation modal
+    // Open the delete confirmation modal
     const openDeleteConfirmation = (productId) => {
-        setProductToDelete(productId); // Set product to delete for confirmation
+        setProductToDelete(productId);
     };
 
-    // Function to handle confirmed deletion
+    // Send request to delete the product
     const confirmDelete = async () => {
         try {
             await axios.delete(`http://localhost:3001/products/${productToDelete}`);
-            onProductUpdated(); // Refresh the product list after deletion
-            setProductToDelete(null); // Close the confirmation modal
+            onProductUpdated();
+            setProductToDelete(null);
         } catch (error) {
             console.error('Error deleting product:', error);
         }
     };
 
-    // Function to cancel the deletion
+    // Cancel the delete operation
     const cancelDelete = () => {
-        setProductToDelete(null); // Close the modal without deleting
+        setProductToDelete(null);
     };
 
-    // Function to safely get the sizes data
+    // Parse the sizes string into an array
     const getSizes = (sizes) => {
-        if (Array.isArray(sizes)) {
-            return sizes;
-        }
-        // If it's not an array, try parsing it as a JSON string or fallback to empty array
+        if (!sizes) return [];
+        if (Array.isArray(sizes)) return sizes;
         try {
-            return JSON.parse(sizes);
+            const parsedSizes = JSON.parse(sizes);
+            return Array.isArray(parsedSizes) ? parsedSizes : [];
         } catch {
             return [];
         }
     };
 
     return (
-<div className="container mx-auto p-4">
+        <div className="container mx-auto p-4">
             <h2 className="text-xl font-semibold mb-4">Product List</h2>
             <div className="overflow-x-auto">
                 <table className="w-full bg-white border border-gray-300 text-sm md:text-base">
@@ -62,14 +68,12 @@ const ProductList = ({ products, onProductUpdated }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product) => {
-                            // Check if sizes exist and parse it if it's a string
-                            const sizes = Array.isArray(product.sizes) ? product.sizes : 
-                                          product.sizes ? JSON.parse(product.sizes) : [];
-
+                        {productList.map((product) => {
+                            const sizes = getSizes(product.sizes);
                             return (
                                 <tr key={product.id} className="border-b hover:bg-gray-100">
                                     <td className="p-2 md:p-3 flex justify-center">
+                                        {/* FETCH PRODUCT IMAGES FROM THE SERVER  */}
                                         <img
                                             src={`http://localhost:3001${product.image_url}`}
                                             alt={product.product_name}
@@ -88,6 +92,7 @@ const ProductList = ({ products, onProductUpdated }) => {
                                                 ))}
                                             </ul>
                                         ) : (
+                                            // Display N/A if no sizes are available
                                             <span className="text-gray-500">N/A</span>
                                         )}
                                     </td>
@@ -112,6 +117,9 @@ const ProductList = ({ products, onProductUpdated }) => {
                 </table>
             </div>
 
+
+            {/* MODALS FOR EDIT AND DELETE OPERATIONS */}
+
             {selectedProduct && (
                 <EditProduct
                     product={selectedProduct}
@@ -127,7 +135,6 @@ const ProductList = ({ products, onProductUpdated }) => {
                 />
             )}
         </div>
-
     );
 };
 

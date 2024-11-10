@@ -63,12 +63,12 @@ app.get('/products', (req, res) => {
 // Endpoint to Update Product by id
 app.put('/products/:id', upload.single('image'), (req, res) => {
     const productId = req.params.id;
-    const { product_name, price, description, category } = req.body; // Destructure category from the body
+    const { product_name, price, description, category, sizes } = req.body; // Include sizes in the body
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     // SQL QUERY TO UPDATE RECORD IN THE DATABASE
-    let sql = `UPDATE tbl_products SET product_name = ?, price = ?, description = ?, category = ?`; // Add category here
-    const params = [product_name, price, description, category]; // Add category to the params array
+    let sql = `UPDATE tbl_products SET product_name = ?, price = ?, description = ?, category = ?, sizes = ?`; // Add sizes to SQL query
+    const params = [product_name, price, description, category, sizes]; // Add sizes to params
 
     // If a new image is uploaded, include it in the update
     if (req.file) {
@@ -76,6 +76,7 @@ app.put('/products/:id', upload.single('image'), (req, res) => {
         params.push(`/uploads/${req.file.filename}`);
     }
 
+    // Find the Product by id and Update the Record
     sql += ` WHERE id = ?`;
     params.push(productId);
 
